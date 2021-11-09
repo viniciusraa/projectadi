@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Clima ADI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../static/css/weatherCss.css" th:href="@{/css/weatherCss.css}">
+</head>
+<body>
+  <div class="header">
+    <h1>Clima ADI</h1>
+  </div>
+  <div class="search">
+    <form class="form" id="myForm">
+      <input type="text" name="country" id="country" placeholder="São Paulo, SP, BRA">
+      <button id="searchButton" type="submit">Enviar</button>
+    </form>
+  </div>
+  <div class="displayWeather">
+    <div class="container">
+      <h3 id="cityName"></h3>
+      <h3 id="stateCode"></h3>
+      <h3 id="description"></h3>
+      <h3 id="temp"></h3>
+      <h3 id="feelsLike"></h3>
+      <h3 id="tempMin"></h3>
+      <h3 id="tempMax"></h3>
+      <h3 id="pressure"></h3>
+      <h3 id="humidity"></h3>
+      <h3 id="windSpeed"></h3>
+    </div>
+  </div>
+  <script>
+    window.onload = () => {
+      let country = document.getElementById("myForm");
+      country.onsubmit = function(event){
+        event.preventDefault()
+        const countryValue = event.target[0].value
+        fetch(`http://localhost:8080/weather?city=${countryValue}`)
+                .then(response => response.json())
+                // .then(data => console.log(data))
+                .then(function (data) {
+                  document.getElementById("cityName").innerHTML = "Cidade: " + data.name;
+                  document.getElementById("stateCode").innerHTML = "País: " + data.sys.country;
+                  document.getElementById("description").innerHTML = "Clima: " + data.weather[0].description;
+                  document.getElementById("temp").innerHTML = "Temperatura: " + data.main.temp + ' ºC';
+                  document.getElementById("feelsLike").innerHTML = "Sensação térmica: " + data.main.feels_like + ' ºC';
+                  document.getElementById("tempMin").innerHTML = "Temperatura mínima: " + data.main.temp_min + ' ºC';
+                  document.getElementById("tempMax").innerHTML = "Temperatura máxima: " + data.main.temp_max + ' ºC';
+                  document.getElementById("pressure").innerHTML = "Pressão: " + data.main.pressure + ' hPa';
+                  document.getElementById("humidity").innerHTML = "Umidade: " + data.main.humidity + ' %';
+                  document.getElementById("windSpeed").innerHTML = "Vento: " + data.wind.speed + ' m/s';
+                });
+      }
+    }
+  </script>
+</body>
+</html>
